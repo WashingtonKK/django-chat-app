@@ -1,2 +1,3 @@
 # django-chat-app
-I am working on chat application using Django.
+I am working on a chat application using Django.
+
