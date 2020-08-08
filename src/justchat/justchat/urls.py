@@ -1,10 +1,8 @@
 from django.contrib import admin
-from django.urls import path
-
-from chat.views import index
+from django.urls import path, include
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name='index'),
+    path('chat/', include('chat.urls', namespace='chat')),
 ]
