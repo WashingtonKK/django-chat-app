@@ -1,0 +1,36 @@
+The chat app runs in the local host at https://127.0.1:8000
+The interface is designed in HTML and CSS
+
+To build the server, I used Django-channels, used primarily for chat applications.
+The service is an asynchronous chat application.
+Furthermore I have used redis, 
+
+To run the program, the following requirements are needed.
+	1. Python
+	2. Django
+	3. Memurai (In place of Redis that does not work on windows)
+	4. Django-channels
+	5. Microsoft Visual C++ 14.0 Developer tools (I realised that I did not have them even though I thought I did)
+	6. 
+Some of the dependencies can be instsalled via download (Python, Memurai) while Django is installed usign Pip on windows
+The install on other operating systems is not covered here but is available on google search.
+
+When you receive the folder, navigate to the justchat fodler that has the file manage.py and run the command;
+		
+		python manage.py runserver
+
+If all goes well you should see a bunch of statements, the final one being;
+	Starting ASGI/Channels version 2.4.0 development server at http://127.0.0.1:8000/
+	Quit the server with CTRL-BREAK.
+
+Then to test your work you can go to the local host at 
+		http://127.0.0.1:8000/chat
+
+which will ask you for the chat room you want to enter, once joined to the room you can chat with the other people in
+the same room. (You can open the same link [http://127.0.0.1:8000/chat/room-name] in a different web browser[incognito]
+and check the results.
+
+
+2 super users created:
+	username: washington          password: 123456789
+	username: kamadi	      password: 123456789
