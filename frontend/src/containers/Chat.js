@@ -1,7 +1,63 @@
 import React from 'react';
 import Sidepanel from './Sidepanel/Sidepanel';
+import WebSocketInstance from '../websocket';
 
 class Chat extends React.Component {
+
+    constructor (props) {
+        super(props)
+        this.state = {}
+
+        this.waitForSocketConnection (() => {
+            WebSocketInstance.addCallbacks(
+                this.setMessages.bind(this),
+                this.addMessage.bind(this) );
+            WebSocketInstance.fetchMessages(this.props.currentUser);    
+        });
+    }
+
+    waitForSocketConnection(callback) {
+        const component = this;
+        setTimeout(
+            function () {
+                if (ebSocketInstance.state() === 1) {
+                    console.log ('connection is secure');
+                    callback();
+                    return;
+                } else {
+                    console.log('waiting for connection...');
+                    component.waitForSocketConnection(callback);
+                }
+            }, 100);
+    }
+    addMessage(message) {
+        this.setState({
+            messages: [...this.state.messages, message]
+        });
+    }
+
+    setMessages(messages) {
+        this.setState({
+            messages: messages.reverse()
+        });
+    }
+
+
+    renderMessages = (messages) => {
+        const currentUser = 'admin';
+        return messages.map(message => (
+            <li 
+                key={message.id}
+                className = {message.author === currentUser ? 'sent'}>
+                <img src="http://emilcarlsson.se/assets/mikeross.png" />
+                <p>
+                    {message.content}
+                </p>
+            </li>
+        ))
+    }
+
+
     render() {
         return (
             <div id="frame">

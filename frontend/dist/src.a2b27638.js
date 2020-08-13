@@ -28392,7 +28392,157 @@ var Sidepanel = function Sidepanel(props) {
 
 var _default = Sidepanel;
 exports.default = _default;
-},{"react":"node_modules/react/index.js"}],"src/containers/Chat.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js"}],"src/websocket.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var WebSocketService = /*#__PURE__*/function () {
+  _createClass(WebSocketService, null, [{
+    key: "getInstance",
+    value: function getInstance() {
+      if (!WebSocketService.instance) {
+        WebSocketService.instance = new WebSocketService();
+      }
+
+      return WebSocketService.instance;
+    }
+  }]);
+
+  function WebSocketService() {
+    _classCallCheck(this, WebSocketService);
+
+    _defineProperty(this, "callbacks", {});
+
+    this.socketRef = null;
+  }
+
+  _createClass(WebSocketService, [{
+    key: "connect",
+    value: function connect() {
+      var _this = this;
+
+      var path = 'ws://127.0.0.1:8000/ws/chat/test';
+      this.socketRef = new WebSocket(path);
+
+      this.socketRef.onopen = function () {
+        console.log('websocket open');
+      };
+
+      this.socketRef.onmessage = function (e) {//sending message
+      };
+
+      this.socketRef.onerror = function (e) {
+        console.log(e.message);
+      };
+
+      this.socketRef.onclose = function () {
+        consolele.log('Websocket is closed');
+
+        _this.connect();
+      };
+    }
+  }, {
+    key: "socketNewMessage",
+    value: function socketNewMessage(data) {
+      var parseData = JSON.parse(data);
+      var command = parsedData.command;
+
+      if (Object.keys(this.callbacks).length == 0) {
+        return;
+      }
+
+      if (command === 'messages') {
+        this.callbacks[command](parsedData.messages); //confirm whether it is message or messages
+      }
+
+      if (command === 'new_message') {
+        this.callbacks[command](parseData.message);
+      }
+    }
+  }, {
+    key: "fetchMessages",
+    value: function fetchMessages(username) {
+      this.sendMessage({
+        command: 'fetch_messages',
+        username: username
+      });
+    }
+  }, {
+    key: "newChatMessage",
+    value: function newChatMessage(message) {
+      this.sendMessage({
+        command: 'new_message',
+        from: message.from,
+        message: message.content
+      });
+    }
+  }, {
+    key: "addCallbacks",
+    value: function addCallbacks(messagesCallback, newMessageCallback) {
+      this.callbacks['messages'] = messagesCallback;
+      this.callbacks['new_message'] = newMessageCallback;
+    }
+  }, {
+    key: "sendMessage",
+    value: function sendMessage(data) {
+      try {
+        this.socketRef.send(JSON.stringify(_objectSpread({}, data)));
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+  }, {
+    key: "state",
+    value: function state() {
+      return this.socketRef.readyState;
+    }
+  }, {
+    key: "waitForSocketConnection",
+    value: function waitForSocketConnection(callback) {
+      var socket = this.socketRef;
+      var recursion = this.waitForSocketConnection;
+      setTimeout(function () {
+        if (socket.readyState === 1) {
+          console.log('connection is secure');
+
+          if (callback != null) {
+            callback();
+          }
+
+          return;
+        } else {
+          console.log('waiting for connection...');
+          recursion(callback);
+        }
+      }, 1);
+    }
+  }]);
+
+  return WebSocketService;
+}();
+
+_defineProperty(WebSocketService, "instance", null);
+
+var WebSocketInstance = WebSocketService.getInstance();
+var _default = WebSocketInstance;
+exports.default = _default;
+},{}],"src/containers/Chat.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28404,9 +28554,23 @@ var _react = _interopRequireDefault(require("react"));
 
 var _Sidepanel = _interopRequireDefault(require("./Sidepanel/Sidepanel"));
 
+var _websocket = _interopRequireDefault(require("../websocket"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -28433,13 +28597,53 @@ var Chat = /*#__PURE__*/function (_React$Component) {
 
   var _super = _createSuper(Chat);
 
-  function Chat() {
+  function Chat(props) {
+    var _this;
+
     _classCallCheck(this, Chat);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, props);
+    _this.state = {};
+
+    _this.waitForSocketConnection(function () {
+      _websocket.default.addCallbacks(_this.setMessages.bind(_assertThisInitialized(_this)), _this.addMessage.bind(_assertThisInitialized(_this)));
+
+      _websocket.default.fetchMessages(_this.props.currentUser);
+    });
+
+    return _this;
   }
 
   _createClass(Chat, [{
+    key: "waitForSocketConnection",
+    value: function waitForSocketConnection(callback) {
+      var component = this;
+      setTimeout(function () {
+        if (ebSocketInstance.state() === 1) {
+          console.log('connection is secure');
+          callback();
+          return;
+        } else {
+          console.log('waiting for connection...');
+          component.waitForSocketConnection(callback);
+        }
+      }, 100);
+    }
+  }, {
+    key: "addMessage",
+    value: function addMessage(message) {
+      this.setState({
+        messages: [].concat(_toConsumableArray(this.state.messages), [message])
+      });
+    }
+  }, {
+    key: "setMessages",
+    value: function setMessages(messages) {
+      this.setState({
+        messages: messages.reverse()
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/_react.default.createElement("div", {
@@ -28492,7 +28696,7 @@ var Chat = /*#__PURE__*/function (_React$Component) {
 
 var _default = Chat;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","./Sidepanel/Sidepanel":"src/containers/Sidepanel/Sidepanel.js"}],"src/index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","./Sidepanel/Sidepanel":"src/containers/Sidepanel/Sidepanel.js","../websocket":"src/websocket.js"}],"src/index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -28575,7 +28779,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55010" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51507" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
