@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import Chat from './containers/Chat'
 
 class App extends React.Component {
-    reder () {
+    render () {
         return (
-            <div>hello</div>
+            <Chat />
         )
     }
 }
 
-ReactDOM.render(<App/>, document.getElementById('app'));
+ReactDOM.render(<App />, document.getElementById('app'));
