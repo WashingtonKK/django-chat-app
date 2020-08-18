@@ -41,7 +41,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'justchat.urls'
+ROOT_URLCONF = 'MyApp.urls'
 
 TEMPLATES = [
     {
@@ -59,8 +59,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'justchat.wsgi.application'
-ASGI_APPLICATION = 'justchat.routing.application'
+WSGI_APPLICATION = 'MyApp.wsgi.application'
+ASGI_APPLICATION = 'MyApp.routing.application'
 
 CHANNEL_LAYERS = {
     'default': {

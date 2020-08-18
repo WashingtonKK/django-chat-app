@@ -44,7 +44,7 @@ MIDDLEWARE = [
 ]
 
 #Configuring the URL of the root
-ROOT_URLCONF = 'justchat.urls'
+ROOT_URLCONF = 'MyApp.urls'
 
 #Here we will specify any templates we have and are using
 TEMPLATES = [
@@ -64,8 +64,8 @@ TEMPLATES = [
 ]
 
 #The default comes with a WSGI application, however since we are using ASGI we will add it also
-WSGI_APPLICATION = 'justchat.wsgi.application'
-ASGI_APPLICATION = "justchat.routing.application"
+WSGI_APPLICATION = 'MyApp.wsgi.application'
+ASGI_APPLICATION = "MyApp.routing.application"
 
 #The layer of the channel we used redis
 CHANNEL_LAYERS = {
