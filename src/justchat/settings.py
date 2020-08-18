@@ -1,23 +1,26 @@
+#Here we have the app settings
+
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# THe paths should be built inside the project in this manner: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
+# Whwn in prroduction, the secret key is to be kept in secret
 SECRET_KEY = '9nneu#^7_aai*(#(6_qiihu-^k-+%a86&vjh=_i9#(c4^8s51n'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# When in production, turn off Debug mode
 DEBUG = True
 
+#Allowed hosts
 ALLOWED_HOSTS = []
 
 
-# Application definition
 
+#Here we give the list of installed apps
+#The other apps come by default except channels and chat
+#chat is our app, the one we created
+#channels is the framework we will be using
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -29,6 +32,7 @@ INSTALLED_APPS = [
     'chat'
 ]
 
+#Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -39,8 +43,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+#Configuring the URL of the root
 ROOT_URLCONF = 'justchat.urls'
 
+#Here we will specify any templates we have and are using
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -57,21 +63,24 @@ TEMPLATES = [
     },
 ]
 
+#The default comes with a WSGI application, however since we are using ASGI we will add it also
 WSGI_APPLICATION = 'justchat.wsgi.application'
 ASGI_APPLICATION = "justchat.routing.application"
 
+#The layer of the channel we used redis
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        #Configuring the backend as redis
+        'BACKEND': 'channels_redis.core.RedisChannelLayer', 
+        #Redis runs on port 6379
         'CONFIG': {
             "hosts": [('127.0.0.1', 6379)],
         },
     },
 }
 
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+#For our database we will use SQLITE3
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -79,9 +88,8 @@ DATABASES = {
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
+#Validating the password input
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -98,8 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/2.1/topics/i18n/
+# Internationalization of time
 
 LANGUAGE_CODE = 'en-us'
 
@@ -113,8 +120,7 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
-
+#Defining the static that is used for imports to avoid the room name
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),

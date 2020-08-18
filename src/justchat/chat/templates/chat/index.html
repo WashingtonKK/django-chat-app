@@ -3,23 +3,132 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>Chat Rooms</title>
+    <title>New Room</title>
+
+    <!--Styling the page to create a new room-->
+    <!---Making the text inputs centred and adding some style to the elements-->
+    <!--Modifying the look and feel of the room link page-->
+    <style>
+
+        /*Modifying the button*/
+        input[type=button] {
+            background-color: rgb(13, 1, 66);
+            border: none;
+            color: white;
+            padding: 16px 32px;
+            text-decoration: none;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        /*Modifying the text input field*/
+        input[type=text] {
+            transition: width 3.0s ease-in-out;
+        }
+
+        input[type=text]:focus {
+            width: 80%;
+            text-size-adjust: 50px;
+        }
+
+        .container{
+            text-align: center;
+            margin-bottom: 50px;
+            margin-top: 50px;
+            margin: auto;
+        }
+
+        /*The button that submits the room name*/
+        #room-name-submit{
+            cursor: pointer;
+            border-radius: 5px 25px;
+            height:100%;
+            width:100px;
+            text-align: center;
+        }
+
+        /*The classs that conotains the room name input*/
+        #room-name-input{
+            width: 30%;
+            height: 150px;
+            padding: 12px 20px;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+            text-align: center;
+            resize: none;            
+        }
+
+        /*modifying the text area where the text input is found*/
+        #textarea{
+            width: 50%;
+            height: 150px;
+            margin: auto;
+            padding: 12px 20px;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            background-color: #caf4f7;
+            resize: none;
+        }
+
+        /*Modifying the text appearing on the page*/
+        p {
+            text-transform: uppercase;
+            color: rgb(13, 1, 66);
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            font-size: 48px;
+            
+        }
+
+        /*The background color*/
+        body {
+            background-color: rgb(208, 179, 255);
+        }
+    </style>
+
 </head>
 <body>
-    What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
-    <input id="room-name-submit" type="button" value="Enter">
 
+    <div>
+        <!--The text at the top of the page, with the text input and button-->
+        <!--It has the description of the page-->
+        <div class = "container">
+            <p><b>enter room name</b><br/></p>
+        </div>		
+
+        <!--Text area for the room name-->
+        <!--The room name will be submitted and used to form the link to the room-->
+        <div class="container" id="textarea">
+            <input id="room-name-input" type="text" autocomplete="off"/><br/>
+        </div>
+
+        <!--From here we submit the room name that has been entered-->
+        <!--The button to send the room name-->
+        <div class = "container">
+            <input class="container" id="room-name-submit" type="button" value="Join"/>
+        </div>
+    </div>
+
+    <!--Javascript code to handle the button and text input-->
+    <!--Converts the submitted room name to the link to the created room-->
     <script>
+        //We are getting the values from the text-field and form the button
         document.querySelector('#room-name-input').focus();
+
+        //Waiting for the enter key to be pressed
         document.querySelector('#room-name-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
+            if (e.keyCode === 13) {  // Waiting for the enter key that will also work as a submit
                 document.querySelector('#room-name-submit').click();
             }
         };
 
-        document.querySelector('#room-name-submit').onclick = function(e) {
+    //converting the text in the text area to the link to the actual room
+        document.querySelector('#room-name-submit').onclick = function(e) {  //converting the text to the room link
             var roomName = document.querySelector('#room-name-input').value;
+
+            //Combining the chat/ prefix with the room name entered
             window.location.pathname = '/chat/' + roomName + '/';
         };
     </script>
